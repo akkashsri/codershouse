@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './Home.module.css';
-import {Link, useNavigate} from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 import Card from '../../components/shared/Card/Card';
 import Button from '../../components/shared/Button/Button';
 
@@ -12,14 +12,14 @@ const Home = () => {
       marginLeft: '10px',
   }
 
-const navigate = useNavigate();
+const history = useHistory();
   function startRegister() {
-    navigate('/register');
+    history.push('/register');
 }
 
   return (
     <div className={styles.cardWrapper}>
-        <Card title="Welcome to Coderhouse!" icon="logo">
+        <Card title="Welcome to Codershouse!" icon="logo">
              <p className={styles.text}>
                 We're working hard to get Codershouse ready for everyone! While we wrap up the finishing youches, we're adding people gradually to make sure nothing breaks
             </p>

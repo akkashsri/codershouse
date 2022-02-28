@@ -13,4 +13,4 @@ const Card = ({title, icon, children}) => {
   )
 }
 
-export default Card
+export default Card;

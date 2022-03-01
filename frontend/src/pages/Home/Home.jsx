@@ -14,7 +14,7 @@ const Home = () => {
 
 const history = useHistory();
   function startRegister() {
-    history.push('/register');
+    history.push('/authenticate');
 }
 
   return (
@@ -24,11 +24,10 @@ const history = useHistory();
                 We're working hard to get Codershouse ready for everyone! While we wrap up the finishing youches, we're adding people gradually to make sure nothing breaks
             </p>
              <div>
-                 <Button onClick={startRegister} text="Get Your username"/>
+                 <Button onClick={startRegister} text="Let's Go"/>
              </div>
              <div className={styles.signinWrapper}>
                  <span className={styles.hasInvite}>Have an invite text?</span>
-                 <Link style={signInLinkStyle} to='/login'>Sign in</Link>
              </div>
         </Card>
     </div>

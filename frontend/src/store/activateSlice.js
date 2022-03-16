@@ -1,9 +1,9 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     name: '',
-    avatar: ''
-}
+    avatar: '',
+};
 
 export const activateSlice = createSlice({
   name: 'activate',
@@ -14,11 +14,11 @@ export const activateSlice = createSlice({
     },
     setAvatar: (state, action) => {
       state.avatar = action.payload;
-    }
+    },
   },
-})
+});
 
 // Action creators are generated for each case reducer function
-export const { setName, setAvatar} = activateSlice.actions;
+export const { setName, setAvatar } = activateSlice.actions;
 
 export default activateSlice.reducer;

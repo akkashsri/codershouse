@@ -19,9 +19,9 @@ const history = useHistory();
 
   return (
     <div className={styles.cardWrapper}>
-        <Card title="Welcome to Codershouse!" icon="logo">
+        <Card title="Welcome to SocialMic !" icon="logo">
              <p className={styles.text}>
-                We're working hard to get Codershouse ready for everyone! While we wrap up the finishing youches, we're adding people gradually to make sure nothing breaks
+             Social Mic is a place to listen fascinating conversations, talk 🥂with the world's most amazing people, and make new friends from all walks of life.
             </p>
              <div>
                  <Button onClick={startRegister} text="Let's Go"/>

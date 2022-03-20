@@ -32,7 +32,7 @@ const StepAvatar = ({ onNext }) => {
         // check 
         if (!unMounted) {
           dispatch(setAuth(data));
-        }
+      }
         
       }
       setLoading(false);
@@ -44,10 +44,10 @@ const StepAvatar = ({ onNext }) => {
   }
 
   useEffect(() => {
-    return () => {
-      setUnMounted(true);
-    };
-  }, []);
+        return () => {
+            setUnMounted(true);
+        };
+    }, []);
 
   if (loading) return <Loader message="Activation in progress..." />;
   return (

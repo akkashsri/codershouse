@@ -23,7 +23,7 @@ const Phone = ({ onNext }) => {
   }
 
   return (
-    <Card title="Enter you phone number" icon="phone">
+    <Card title="Enter your phone number" icon="phone">
       <TextInput
         value={phoneNumber}
         onChange={(e) => setPhoneNumber(e.target.value)}

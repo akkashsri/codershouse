@@ -158,7 +158,7 @@ export const useWebRTC = (roomId, user) => {
         new RTCSessionDescription(remoteSessionDescription)
       );
 
-      // If session description is offer then create an answer
+      // If session descrition is offer then create an answer
       if (remoteSessionDescription.type === "offer") {
         const connection = connections.current[peerId];
 
@@ -211,4 +211,13 @@ export const useWebRTC = (roomId, user) => {
   };
 
   return { clients, provideRef };
+  const handleAudioMute = (mute) => {
+    if (mute === true) {
+      localMediaStream.current.audio = false;
+    } else {
+      localMediaStream.current.audio = true;
+    }
+  };
+
+  return { clients, provideRef, handleAudioMute };
 };

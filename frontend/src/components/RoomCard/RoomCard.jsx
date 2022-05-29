@@ -5,15 +5,16 @@ import { useHistory } from 'react-router-dom';
 const RoomCard = ({ room }) => {
   const history = useHistory();
   return (
-    <div className={styles.card}>
+    // <div className={styles.card}>
       <div
             onClick={() => {
                 history.push(`/room/${room.id}`);
             }}
             className={styles.card}
-        ></div>
+      >
+        {/* </div> */}
       <h3 className={styles.topic}>{room.topic}</h3>
-      <div className={styles.speakers}>
+      {/* <div className={styles.speakers}> */}
       <div
                 className={`${styles.speakers} ${
                     room.speakers.length === 1 ? styles.singleSpeaker : ''
@@ -37,7 +38,8 @@ const RoomCard = ({ room }) => {
               <span>{room.totalPeople}</span>
               <img src="/images/user-icon.png" alt="user-icon" />
           </div>
-    </div></div>
+    </div>
+    // </div >
   );
 };
 

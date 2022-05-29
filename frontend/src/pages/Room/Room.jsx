@@ -11,15 +11,14 @@ const Room = () => {
   const { id: roomId } = useParams();
   const [room, setRoom] = useState(null);
 
-  const { clients, provideRef, handleAudioMute } = useWebRTC(roomId, user);
+  const { clients, provideRef, handleMute, localStream } = useWebRTC(
+    roomId,
+    user
+  );
 
   const history = useHistory();
 
   const [isMuted, setMuted] = useState(true);
-
-  useEffect(() => {
-    console.log("mute", isMuted);
-  }, [isMuted]);
 
   useEffect(() => {
     const fetchRoom = async () => {
@@ -30,15 +29,18 @@ const Room = () => {
     fetchRoom();
   }, [roomId]);
 
+  useEffect(() => {
+    handleMute(isMuted, user.id);
+  }, [isMuted]);
+
   const handManualLeave = () => {
     history.push("/rooms");
   };
 
-  const handleMute = () => {
-    // Run muting logic
-    handleAudioMute(isMuted);
+  const handleMuteClick = (clientId) => {
+    if (clientId !== user.id) return;
     setMuted((prev) => !prev);
-  };
+};
 
   return (
     <div>
@@ -78,8 +80,11 @@ const Room = () => {
                       provideRef(instance, client.id);
                     }}
                   />
-                  <button onClick={handleMute} className={styles.micBtn}>
-                    {isMuted ? (
+                  <button
+                    onClick={() => handleMuteClick(client.id)}
+                    className={styles.micBtn}
+                  >
+                    {client.muted ? (
                       <img
                         className={styles.mic}
                         src="/images/mic-mute.png"

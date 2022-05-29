@@ -10,6 +10,7 @@ export const useWebRTC = (roomId, user) => {
   const connections = useRef({});
   const socket = useRef(null);
   const localMediaStream = useRef(null);
+  const clientsRef = useRef([]);
 
   const addNewClient = useCallback(
     (newClient, cb) => {
@@ -53,7 +54,7 @@ export const useWebRTC = (roomId, user) => {
 
       // Handle on track event on this connection
       connections.current[peerId].ontrack = ({ streams: [remoteStream] }) => {
-        addNewClient(remoteUser, () => {
+        addNewClient({ ...remoteUser, muted: true }, () => {
           // console.log('peer', audioElements.current, peerId);
           if (audioElements.current[remoteUser.id]) {
             audioElements.current[remoteUser.id].srcObject = remoteStream;
@@ -111,7 +112,7 @@ export const useWebRTC = (roomId, user) => {
 
     startCapture().then(() => {
       // add user to clients list
-      addNewClient(user, () => {
+      addNewClient({ ...user, muted: true }, () => {
         const localElement = audioElements.current[user.id];
         if (localElement) {
           localElement.volume = 0;
@@ -206,18 +207,84 @@ export const useWebRTC = (roomId, user) => {
     };
   }, []);
 
+  useEffect(() => {
+    // handle mute and unmute
+    socket.current.on(ACTIONS.MUTE, ({ peerId, userId }) => {
+      console.log("muting", userId);
+      setMute(true, userId);
+    });
+
+    socket.current.on(ACTIONS.UNMUTE, ({ peerId, userId }) => {
+      console.log("unmuting", userId);
+      setMute(false, userId);
+    });
+
+    const setMute = (mute, userId) => {
+      const clientIdx = clientsRef.current
+                .map((client) => client.id)
+                .indexOf(userId);
+
+            console.log('idx', clientIdx);
+
+            // const connectedClients = clientsRef.current.filter(
+            //     (client) => client.id !== userId
+            // );
+
+            const connectedClientsClone = JSON.parse(
+                JSON.stringify(clientsRef.current)
+            );
+
+      if (clientIdx > -1) {
+        connectedClientsClone[clientIdx].muted = mute;
+        console.log('muuuu', connectedClientsClone);
+        setClients((_) => connectedClientsClone);
+      }
+    };
+  }, []);
+
   const provideRef = (instance, userId) => {
     audioElements.current[userId] = instance;
   };
 
-  return { clients, provideRef };
-  const handleAudioMute = (mute) => {
-    if (mute === true) {
-      localMediaStream.current.audio = false;
-    } else {
-      localMediaStream.current.audio = true;
+  useEffect(() => {
+    clientsRef.current = clients;
+}, [clients]);
+
+  const handleMute = (isMute, userId) => {
+    let settled = false;
+
+    if (userId === user.id) {
+      let interval = setInterval(() => {
+        if (localMediaStream.current) {
+          localMediaStream.current.getTracks()[0].enabled = !isMute;
+          if (isMute) {
+            socket.current.emit(ACTIONS.MUTE, {
+              roomId,
+              userId: user.id,
+            });
+          } else {
+            socket.current.emit(ACTIONS.UNMUTE, {
+              roomId,
+              userId: user.id,
+            });
+          }
+          // console.log(
+          //     'localMediaStream ',
+          //     localMediaStream.current.getTracks()
+          // );
+          settled = true;
+        }
+        if (settled) {
+          clearInterval(interval);
+        }
+      }, 200);
     }
   };
 
-  return { clients, provideRef, handleAudioMute };
+  return {
+    clients,
+    provideRef,
+    handleMute,
+    localStream: localMediaStream.current,
+  };
 };
